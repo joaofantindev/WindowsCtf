@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WinCTF — Laboratório de Defesa Windows</title>
+<meta name="description" content="CTF prático de Windows: registros, logs, eventos, batch e PowerShell do básico ao avançado.">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='2' width='13' height='13' rx='2' fill='%2360cdff'/><rect x='17' y='2' width='13' height='13' rx='2' fill='%234cc2ff'/><rect x='2' y='17' width='13' height='13' rx='2' fill='%234cc2ff'/><rect x='17' y='17' width='13' height='13' rx='2' fill='%2360cdff'/></svg>">
+</head>
+<body>
+
+<div class="bg-scene" aria-hidden="true">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+  <div class="grid-lines"></div>
+</div>
+
+<aside class="rail">
+  <div class="rail-brand">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22"><rect x="2" y="2" width="9" height="9" rx="1.6" fill="currentColor" opacity=".95"/><rect x="13" y="2" width="9" height="9" rx="1.6" fill="currentColor" opacity=".7"/><rect x="2" y="13" width="9" height="9" rx="1.6" fill="currentColor" opacity=".7"/><rect x="13" y="13" width="9" height="9" rx="1.6" fill="currentColor" opacity=".95"/></svg>
+    </span>
+    <span class="brand-name">WinCTF</span>
+  </div>
+
+  <nav class="rail-nav" aria-label="Navegação principal">
+    <button class="nav-item active" data-page="home">
+      <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><path d="M3 10.6 12 3.2l9 7.4V20a1.4 1.4 0 0 1-1.4 1.4h-4.4V15h-6.4v6.4H4.4A1.4 1.4 0 0 1 3 20z"/></svg>
+      <span>Dashboard</span>
+    </button>
+    <button class="nav-item" data-page="config">
+      <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.3 14.6a1.6 1.6 0 0 0 .32 1.77l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.77-.32 1.6 1.6 0 0 0-.97 1.47V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1.05-1.46 1.6 1.6 0 0 0-1.77.32l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.6 1.6 0 0 0 .32-1.77 1.6 1.6 0 0 0-1.47-.97H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.46-1.05 1.6 1.6 0 0 0-.32-1.77l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.6 1.6 0 0 0 1.77.32H9a1.6 1.6 0 0 0 .97-1.47V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 .97 1.46 1.6 1.6 0 0 0 1.77-.32l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.6 1.6 0 0 0-.32 1.77V9c.27.6.86.97 1.52.97H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.46.97z"/></svg>
+      <span>Configurações</span>
+    </button>
+    <button class="nav-item" data-page="logs">
+      <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><path d="M14 2.6H6.6A1.6 1.6 0 0 0 5 4.2v15.6a1.6 1.6 0 0 0 1.6 1.6h10.8a1.6 1.6 0 0 0 1.6-1.6V7.6z"/><path d="M14 2.6V7.6h5"/><path d="M8 14.4h1.7l1.2 2.6 1.9-5 1.2 2.4H16"/></svg>
+      <span>Logs &amp; Eventos</span>
+    </button>
+    <button class="nav-item" data-page="bat">
+      <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><rect x="2.6" y="4.2" width="18.8" height="15.6" rx="2.2"/><path d="m7 9.6 3 2.6-3 2.6"/><path d="M12.6 15h4.8"/></svg>
+      <span>Batch (.bat)</span>
+    </button>
+    <button class="nav-item" data-page="ps1">
+      <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><path d="m8.4 7.6-4.6 4.4 4.6 4.4"/><path d="m15.6 7.6 4.6 4.4-4.6 4.4"/><path d="m13.2 5.6-2.4 12.8"/></svg>
+      <span>PowerShell (.ps1)</span>
+    </button>
+    <button class="nav-item" data-page="terminal">
+      <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><rect x="2.6" y="3.6" width="18.8" height="16.8" rx="2.4"/><circle cx="7.4" cy="7.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="11.4" cy="7.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.4" cy="7.6" r="1.1" fill="currentColor" stroke="none"/><path d="m7.6 12.4 3 2.6-3 2.6"/><path d="M13.4 17.4h4"/></svg>
+      <span>Terminal</span>
+    </button>
+    <button class="nav-item" data-page="ref">
+      <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><path d="M4.4 19.4A2.4 2.4 0 0 1 6.8 17H20"/><path d="M6.8 2.4H20v19.2H6.8A2.4 2.4 0 0 1 4.4 19.2V4.8a2.4 2.4 0 0 1 2.4-2.4z"/><path d="M9 7.4h6.4M9 11h6.4"/></svg>
+      <span>Referência</span>
+    </button>
+  </nav>
+
+  <div class="rail-foot">
+    <div class="score-chip" title="Pontuação total">
+      <svg viewBox="0 0 24 24" width="16" height="16" class="ico"><path d="M7.6 3.6h8.8v5a4.4 4.4 0 0 1-8.8 0z"/><path d="M7.6 5.2H5.2a2.4 2.4 0 0 0 2.4 4.4M16.4 5.2h2.4a2.4 2.4 0 0 1-2.4 4.4"/><path d="M12 13v3.4M8.8 20.4h6.4l-.8-3.6H9.6z"/></svg>
+      <b id="railScore">0</b><small> pts</small>
+    </div>
+    <button class="reset-btn" id="resetProgress" title="Zerar progresso">zerar progresso</button>
+  </div>
+</aside>
+
+<main class="stage">
+
+  <!-- ================= DASHBOARD ================= -->
+  <section class="page active" id="page-home">
+    <header class="hero glass">
+      <div class="hero-copy">
+        <span class="pill"><i class="dot"></i> Windows Defense Lab · pt-BR</span>
+        <h1>Caçando flags no <em>registro</em>, nos <em>logs</em> e no <em>shell</em>.</h1>
+        <p>Um CTF de Windows focado em operação real: onde ficam as configurações, como ler o Event Viewer,
+           e comandos de <b>.bat</b> e <b>.ps1</b> do básico ao avançado. Resolva desafios, acumule pontos e pratique
+           no terminal simulado.</p>
+        <div class="hero-actions">
+          <button class="btn primary" data-goto="config">Começar pelos desafios</button>
+          <button class="btn ghost" data-goto="terminal">Abrir terminal</button>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat glass-soft"><b id="statScore">0</b><span>pontos</span></div>
+        <div class="stat glass-soft"><b id="statSolved">0<small>/24</small></b><span>flags</span></div>
+        <div class="stat glass-soft"><b id="statHints">0</b><span>dicas usadas</span></div>
+        <div class="stat glass-soft"><b id="statLevel">Novato</b><span>nível do analista</span></div>
+        <div class="progress glass-soft">
+          <div class="progress-row"><span>Progresso geral</span><b id="statPct">0%</b></div>
+          <div class="bar"><i id="statBar" style="width:0%"></i></div>
+        </div>
+      </div>
+    </header>
+
+    <h2 class="sec-title">Trilhas de prática</h2>
+    <div class="cat-grid" id="catGrid"><!-- cards renderizados --></div>
+
+    <div class="howto glass">
+      <h3>Como funciona</h3>
+      <ol>
+        <li>Escolha uma trilha e leia o <b>artefato</b> (trecho de registro, log, script ou XML).</li>
+        <li>Descubra a resposta — pode ser um <b>caminho</b>, um <b>Event ID</b>, uma <b>saída de script</b> ou uma <b>flag CTF&#123;...&#125;</b> escondida.</li>
+        <li>Digite no campo e clique em <b>Verificar</b>. Dicas custam 50 pts — e a explicação comentada fica sempre disponível.</li>
+        <li>Use o <b>Terminal simulado</b> para treinar comandos — existe uma flag escondida lá dentro.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= CATEGORIAS ================= -->
+  <section class="page" id="page-config">
+    <header class="page-head">
+      <span class="kicker">Trilha 01</span>
+      <h2>Configurações do Windows</h2>
+      <p>Registro, Group Policy, serviços, PATH e persistência. Onde o Windows guarda o que ele faz — e onde o atacante esconde o que <i>ele</i> faz.</p>
+      <div class="head-bar glass-soft"><span id="prog-config">0/6 resolvidos</span><div class="bar mini"><i id="bar-config" style="width:0%"></i></div></div>
+    </header>
+    <div class="ch-list" id="list-config"></div>
+  </section>
+
+  <section class="page" id="page-logs">
+    <header class="page-head">
+      <span class="kicker">Trilha 02</span>
+      <h2>Logs &amp; Eventos</h2>
+      <p>Security, System e PowerShell Operational. Correlacione Event IDs, ache o IP do invasor e decifre comandos ofuscados.</p>
+      <div class="head-bar glass-soft"><span id="prog-logs">0/6 resolvidos</span><div class="bar mini"><i id="bar-logs" style="width:0%"></i></div></div>
+    </header>
+    <div class="ch-list" id="list-logs"></div>
+  </section>
+
+  <section class="page" id="page-bat">
+    <header class="page-head">
+      <span class="kicker">Trilha 03</span>
+      <h2>Batch (.bat / .cmd)</h2>
+      <p>Do <code>echo</code> ao <code>for /f</code> com ofuscação. Preveja saídas, domine <code>%~dp0</code>, redirecionamento e delayed expansion.</p>
+      <div class="head-bar glass-soft"><span id="prog-bat">0/6 resolvidos</span><div class="bar mini"><i id="bar-bat" style="width:0%"></i></div></div>
+    </header>
+    <div class="ch-list" id="list-bat"></div>
+  </section>
+
+  <section class="page" id="page-ps1">
+    <header class="page-head">
+      <span class="kicker">Trilha 04</span>
+      <h2>PowerShell (.ps1)</h2>
+      <p>Pipeline de objetos, <code>Get-WinEvent</code>, decodificação de <code>-EncodedCommand</code> e engenharia reversa de scripts maliciosos.</p>
+      <div class="head-bar glass-soft"><span id="prog-ps1">0/6 resolvidos</span><div class="bar mini"><i id="bar-ps1" style="width:0%"></i></div></div>
+    </header>
+    <div class="ch-list" id="list-ps1"></div>
+  </section>
+
+  <!-- ================= TERMINAL ================= -->
+  <section class="page" id="page-terminal">
+    <header class="page-head">
+      <span class="kicker">Sandbox</span>
+      <h2>Terminal simulado</h2>
+      <p>CMD e PowerShell com um filesystem de mentira. Pratique comandos de verdade — e tem uma flag escondida no disco.</p>
+    </header>
+
+    <div class="term-window">
+      <div class="term-titlebar">
+        <div class="term-tabs">
+          <button class="term-tab active" data-shell="cmd">CMD</button>
+          <button class="term-tab" data-shell="ps">PowerShell</button>
+        </div>
+        <div class="term-dots"><i></i><i></i><i></i></div>
+      </div>
+      <div class="term-body" id="termBody" tabindex="0">
+        <div class="term-out" id="termOut"></div>
+        <div class="term-input-row">
+          <span class="term-prompt" id="termPrompt">C:\&gt;</span>
+          <input id="termInput" autocomplete="off" spellcheck="false" aria-label="entrada do terminal">
+        </div>
+      </div>
+      <div class="term-foot">
+        <span>dica: <code>help</code> lista os comandos · <code>cls</code> limpa · achar a flag do disco vale +50 pts</span>
+        <button class="btn tiny ghost" id="termClear">Limpar</button>
+      </div>
+    </div>
+
+    <div class="term-cheats glass">
+      <h4>Comandos suportados</h4>
+      <div class="cheat-cols">
+        <div><b>CMD</b><code>dir</code> <code>cd</code> <code>type</code> <code>echo</code> <code>set</code> <code>findstr</code> <code>whoami</code> <code>hostname</code> <code>ipconfig</code> <code>systeminfo</code> <code>tasklist</code> <code>netstat -ano</code> <code>net user</code> <code>net localgroup</code> <code>sc query</code> <code>reg query</code> <code>ver</code> <code>where</code> <code>fsutil</code></div>
+        <div><b>PowerShell</b><code>Get-ChildItem</code> <code>Get-Content</code> <code>Get-Process</code> <code>Get-Service</code> <code>Get-WinEvent</code> <code>Get-LocalUser</code> <code>Get-ComputerInfo</code> <code>Get-ExecutionPolicy</code> <code>$PSVersionTable</code> <code>Test-Path</code> <code>Get-Date</code> <code>Get-Location</code> <code>Where-Object</code> <code>Select-Object</code> <code>Sort-Object</code> <code>Measure-Object</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REFERÊNCIA ================= -->
+  <section class="page" id="page-ref">
+    <header class="page-head">
+      <span class="kicker">Cheat sheet</span>
+      <h2>Referência rápida</h2>
+      <p>Tudo que você precisa decorar (ou consultar em prova): caminhos, Event IDs, chaves de registro, comandos e ferramentas.</p>
+      <div class="ref-search glass-soft">
+        <svg viewBox="0 0 24 24" width="18" height="18" class="ico"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+        <input id="refSearch" placeholder="Filtrar: 4624, run, winevt, findstr..." spellcheck="false">
+      </div>
+    </header>
+
+    <div class="ref-grid" id="refGrid"><!-- renderizado --></div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/terminal.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
